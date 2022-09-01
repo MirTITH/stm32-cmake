@@ -14,6 +14,7 @@ set(SOURCE_DIRS
 	Core
 	Drivers
 	Middlewares
+	UserCode
 )
 
 # 启动文件路径
@@ -97,6 +98,7 @@ target_include_directories(${EXECUTABLE} PRIVATE
 	Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F 
 	Drivers/CMSIS/Device/ST/STM32L4xx/Include 
 	Drivers/CMSIS/Include
+	UserCode
 )
 
 target_compile_options(${EXECUTABLE} PRIVATE
