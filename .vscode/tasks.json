@@ -1,22 +1,46 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "flash",
-            "type": "shell",
-            "command": "openocd",
-            "args": [
-                "-f",
-                // "interface/jlink-sw.cfg", // 使用 openocd 自带的配置文件
-                "jlink-sw.cfg", // 使用工程目录下的配置文件
-                "-f",
-                "target/stm32l4x.cfg",
-                "-c",
-                "program \"build/stm32_cmake.elf\" verify reset exit"
-            ],
-            "group": "build"
-        }
-    ]
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: clean rebuild",
+			"command": "cleanRebuild",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template clean rebuild task"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		},
+		{
+			"type": "shell",
+			"label": "Build & Flash",
+			"group": "build",
+			"dependsOn": "CMake: build",
+			"detail": "Build and flash to the target",
+			"command": "openocd",
+			"args": [
+				"-f",
+				// "interface/jlink-sw.cfg", // 使用 openocd 自带的配置文件
+				"jlink-sw.cfg", // 使用工程目录下的配置文件
+				"-f",
+				"target/stm32l4x.cfg",
+				"-c",
+				"program \"build/stm32_cmake.elf\" verify reset exit"
+			]
+		}
+	]
 }

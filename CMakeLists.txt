@@ -1,15 +1,20 @@
+# 标记了 [TO DO] 的是新工程可能需要修改的地方，可以参照 CubeMX 生成的 Makefile 修改
+
 cmake_minimum_required(VERSION 3.15.3)
 
-include(arm-none-eabi-gcc.cmake)
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
+# [TO DO] 项目名
 project(stm32_cmake)
 
-enable_language(C ASM)
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
+enable_language(C CXX ASM)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 
-# 源文件所在的文件夹，会递归添加里面的所有源文件
+# [TO DO] 启动文件路径
+set(ASM_SOURCES startup_stm32l431xx.s)
+
+# [TO DO] 源文件所在的文件夹，会递归添加里面的所有源文件
 set(SOURCE_DIRS
 	Core
 	Drivers
@@ -17,79 +22,8 @@ set(SOURCE_DIRS
 	UserCode
 )
 
-# 启动文件路径
-set(STARTUP_FILE startup_stm32l431xx.s)
-
-# 去掉库中烦人的 warning
-set_source_files_properties(
-	Core/Src/freertos.c 
-	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
-	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
-
-	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
-)
-
-# 编译输出的可执行文件名字
-set(EXECUTABLE ${PROJECT_NAME}.elf)
-
-# 如果想单独设置要编译的文件，则不要设置 SOURCE_DIRS 和 STARTUP_FILE，但需要取消下面的注释，列出所有需要编译的文件
-	# set(STM32CUBEMX_GENERATED_FILES
-	# 	startup_stm32l431xx.s
-
-	# 	Core/Src/main.c 
-	# 	Core/Src/gpio.c 
-	# 	Core/Src/freertos.c 
-	# 	Core/Src/usart.c 
-	# 	Core/Src/stm32l4xx_it.c 
-	# 	Core/Src/stm32l4xx_hal_msp.c 
-	# 	Core/Src/stm32l4xx_hal_timebase_tim.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c 
-	# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c 
-	# 	Core/Src/system_stm32l4xx.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/croutine.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/event_groups.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/list.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/queue.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/tasks.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/timers.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c 
-	# 	Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c 
-	# )
-
-
-foreach(_DIR ${SOURCE_DIRS})
-	file(GLOB_RECURSE temp_list ${_DIR}/*.cpp ${_DIR}/*.c)
-	list(APPEND STM32CUBEMX_GENERATED_FILES ${temp_list})
-endforeach()
-list(APPEND STM32CUBEMX_GENERATED_FILES ${STARTUP_FILE})
-
-add_executable(${EXECUTABLE} ${STM32CUBEMX_GENERATED_FILES})
-
-target_compile_definitions(${EXECUTABLE} PRIVATE
-	-DUSE_HAL_DRIVER
-	-DSTM32L431xx
-)
-
-target_include_directories(${EXECUTABLE} PRIVATE
+# [TO DO] 包含目录
+set(INCLUDE_DIRS
 	Core/Inc 
 	Drivers/STM32L4xx_HAL_Driver/Inc 
 	Drivers/STM32L4xx_HAL_Driver/Inc/Legacy 
@@ -101,11 +35,49 @@ target_include_directories(${EXECUTABLE} PRIVATE
 	UserCode
 )
 
+# [TO DO] 用户链接选项
+set(USER_LINK_OPTIONS
+	-u _printf_float
+)
+
+# [TO DO] 预处理定义
+set(C_DEFS 
+	-DUSE_HAL_DRIVER
+	-DSTM32L431xx
+)
+
+# [TO DO] CPU 和 FPU 设置
+set(CPU -mcpu=cortex-m4)
+set(FPU -mfpu=fpv4-sp-d16)
+set(FLOATABI -mfloat-abi=hard)
+
+# [TO DO] 去掉库中烦人的 warning
+set_source_files_properties(
+	Core/Src/freertos.c 
+	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
+	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
+
+	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
+)
+
+# 编译输出的可执行文件名字
+set(EXECUTABLE ${PROJECT_NAME}.elf)
+
+# 递归寻找 SOURCE_DIRS 中的所有源文件
+foreach(_DIR ${SOURCE_DIRS})
+	file(GLOB_RECURSE temp_list ${_DIR}/*.cpp ${_DIR}/*.c)
+	list(APPEND USER_SOURCE_FILES ${temp_list})
+endforeach()
+
+add_executable(${EXECUTABLE} ${ASM_SOURCES} ${USER_SOURCE_FILES})
+target_compile_definitions(${EXECUTABLE} PRIVATE ${C_DEFS})
+target_include_directories(${EXECUTABLE} PRIVATE ${INCLUDE_DIRS})
+
 target_compile_options(${EXECUTABLE} PRIVATE
-	-mcpu=cortex-m4
+	${CPU}
 	-mthumb
-	-mfpu=fpv4-sp-d16
-	-mfloat-abi=hard
+	${FPU}
+	${FLOATABI}
 
 	-fdata-sections
 	-ffunction-sections
@@ -118,20 +90,21 @@ target_compile_options(${EXECUTABLE} PRIVATE
 
 target_link_options(${EXECUTABLE} PRIVATE
 	-T${CMAKE_SOURCE_DIR}/STM32L431RCTx_FLASH.ld
-	-mcpu=cortex-m4
+	${CPU}
 	-mthumb
-	-mfpu=fpv4-sp-d16
-	-mfloat-abi=hard
+	${FPU}
+	${FLOATABI}
 	-specs=nano.specs
 	-lc
 	-lm
 	-lnosys
+	${USER_LINK_OPTIONS}
 	-Wl,-Map=${PROJECT_NAME}.map,--cref
 	-Wl,--gc-sections
 	-Wl,--print-memory-usage
 )
 
-# Create hex file
+# Create hex file (可选)
 # add_custom_command(TARGET ${EXECUTABLE}
 # 	POST_BUILD
 # 	COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
