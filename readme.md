@@ -4,12 +4,14 @@ CubeMX, cmake, vscode, openocd, Cortex-Debug 工作流模板
 
 显然，需要安装：
 
-   软件：CubeMX, vscode, openocd, CMake
+- 软件：CubeMX, vscode, openocd, CMake
 
-   vscode 插件：Cortex-Debug, C/C++, CMake, CMake Tools
+- vscode 插件：Cortex-Debug, C/C++, CMake, CMake Tools
 
-推荐安装的软件：Ninja（安装后 CMake Tools 默认生成 Ninja 工程，否则生成 make 工程）
+推荐安装的软件：
+- Ninja（安装后 CMake Tools 默认生成 Ninja 工程，否则生成 make 工程）
 
+注意：
 > CMake Tools 插件似乎存在 Bug：生成 make 工程时，可能会出现 make 错误。（截至至 2022-09-02 仍然存在）
 >
 > 使用命令行编译或者安装 Ninja 后，则不会出现错误
