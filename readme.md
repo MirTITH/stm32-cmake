@@ -4,9 +4,9 @@ CubeMX, cmake, vscode, openocd, Cortex-Debug 工作流模板
 
 显然，需要安装：
 
-软件：CubeMX, vscode, openocd, CMake
+   软件：CubeMX, vscode, openocd, CMake
 
-vscode 插件：Cortex-Debug, C/C++, CMake, CMake Tools
+   vscode 插件：Cortex-Debug, C/C++, CMake, CMake Tools
 
 推荐安装的软件：Ninja（安装后 CMake Tools 默认生成 Ninja 工程，否则生成 make 工程）
 
@@ -56,7 +56,8 @@ jlink-sw.cfg
 
 1. 在底栏工具部分选择 arm-none-eabi-gcc.cmake （需要安装 CMake Tools 插件）
 2. 点击 Build 或者按 F7 （默认快捷键）
-   ![1662115928895](image/readme/1662115928895.png)
+
+![1662115928895](image/readme/1662115928895.png)
 
 ### 烧录
 
