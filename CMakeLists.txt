@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.15.3)
 
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
-# [TO DO] 项目名
+# 项目名（修改项目名之后要修改 .vscode 中相应的文件）
 project(stm32_cmake)
 
 enable_language(C CXX ASM)
@@ -13,6 +13,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 # [TO DO] 启动文件路径
 set(ASM_SOURCES startup_stm32l431xx.s)
+
+# [TO DO] 链接脚本（必须是相对路径）
+set(LDSCRIPT STM32L431RCTx_FLASH.ld)
 
 # [TO DO] 源文件所在的文件夹，会递归添加里面的所有源文件
 set(SOURCE_DIRS
@@ -35,7 +38,7 @@ set(INCLUDE_DIRS
 	UserCode
 )
 
-# [TO DO] 用户链接选项
+# 用户链接选项
 set(USER_LINK_OPTIONS
 	-u _printf_float
 )
@@ -51,14 +54,14 @@ set(CPU -mcpu=cortex-m4)
 set(FPU -mfpu=fpv4-sp-d16)
 set(FLOATABI -mfloat-abi=hard)
 
-# [TO DO] 去掉库中烦人的 warning
-set_source_files_properties(
-	Core/Src/freertos.c 
-	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
-	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
+# [TO DO] 去掉库中烦人的 warning（可选）
+# set_source_files_properties(
+# 	Core/Src/freertos.c 
+# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
+# 	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
 
-	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
-)
+# 	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
+# )
 
 # 编译输出的可执行文件名字
 set(EXECUTABLE ${PROJECT_NAME}.elf)
@@ -89,7 +92,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
 )
 
 target_link_options(${EXECUTABLE} PRIVATE
-	-T${CMAKE_SOURCE_DIR}/STM32L431RCTx_FLASH.ld
+	-T${CMAKE_SOURCE_DIR}/${LDSCRIPT}
 	${CPU}
 	-mthumb
 	${FPU}

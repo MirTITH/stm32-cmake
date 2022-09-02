@@ -4,28 +4,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "cmake",
-			"label": "CMake: clean rebuild",
-			"command": "cleanRebuild",
-			"targets": [
-				"all"
-			],
-			"group": "build",
-			"problemMatcher": [],
-			"detail": "CMake template clean rebuild task"
-		},
-		{
-			"type": "cmake",
-			"label": "CMake: build",
-			"command": "build",
-			"targets": [
-				"all"
-			],
-			"group": "build",
-			"problemMatcher": [],
-			"detail": "CMake template build task"
-		},
-		{
 			"type": "shell",
 			"label": "Build & Flash",
 			"group": "build",
@@ -37,10 +15,21 @@
 				// "interface/jlink-sw.cfg", // 使用 openocd 自带的配置文件
 				"jlink-sw.cfg", // 使用工程目录下的配置文件
 				"-f",
-				"target/stm32l4x.cfg",
+				"target/stm32l4x.cfg", // 烧录的 MCU 配置
 				"-c",
 				"program \"build/stm32_cmake.elf\" verify reset exit"
 			]
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task"
 		}
 	]
 }

@@ -9,15 +9,14 @@
 			"type": "cortex-debug",
 			"cwd": "${workspaceFolder}",
 			"request": "launch",
+			"preLaunchTask": "CMake: build", // Debug 前需要先编译，因为 Cortex-Debug 会先下载，所以这里不用下载
 			"runToEntryPoint": "main",
 			"executable": "./build/stm32_cmake.elf", // 编译生成的可执行文件
-
-			// openocd
 			"servertype": "openocd",
 			"configFiles": [
-                "jlink-sw.cfg",
-                "target/stm32l4x.cfg"
-            ]
+				"jlink-sw.cfg",
+				"target/stm32l4x.cfg"
+			]
 		}
 	]
 }
