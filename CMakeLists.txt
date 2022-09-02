@@ -8,7 +8,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 project(stm32_cmake)
 
 enable_language(C CXX ASM)
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 # [TO DO] 启动文件路径
@@ -49,8 +49,10 @@ set(C_DEFS
 	-DSTM32L431xx
 )
 
-# [TO DO] CPU 和 FPU 设置
+# [TO DO] CPU设置
 set(CPU -mcpu=cortex-m4)
+
+# [TO DO] FPU设置（没有则注释掉这部分）
 set(FPU -mfpu=fpv4-sp-d16)
 set(FLOATABI -mfloat-abi=hard)
 

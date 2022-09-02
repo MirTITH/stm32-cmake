@@ -56,8 +56,13 @@ jlink-sw.cfg
 
 ### 编译
 
-1. 在底栏工具部分选择 arm-none-eabi-gcc.cmake （需要安装 CMake Tools 插件）
-2. 点击 Build 或者按 F7 （默认快捷键）
+需要安装 CMake Tools 插件
+
+1. CMake 配置
+   1. ctrl+shift+p, cmake:configure
+   2. 选择 arm-none-eabi-gcc.cmake
+
+2. 编译：点击 Build 或者按 F7 （默认快捷键）
 
 ![1662115928895](image/readme/1662115928895.png)
 
