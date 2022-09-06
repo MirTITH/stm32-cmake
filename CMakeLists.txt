@@ -2,14 +2,17 @@
 
 cmake_minimum_required(VERSION 3.15.3)
 
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
+# 设置交叉工具链，如果这里没设置，在命令行编译时必须用 -DCMAKE_TOOLCHAIN_FILE 指定
+# set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
 # 项目名（修改项目名之后要修改 .vscode 中相应的文件）
 project(stm32_cmake)
 
 enable_language(C CXX ASM)
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS false)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS false)
 
 # [TO DO] 启动文件路径
 set(ASM_SOURCES startup_stm32l431xx.s)
@@ -40,7 +43,8 @@ set(INCLUDE_DIRS
 
 # 用户链接选项
 set(USER_LINK_OPTIONS
-	-u _printf_float
+	-specs=nano.specs # 使用 nano 库
+	-u _printf_float # 打开 nano 库中的浮点数打印功能
 )
 
 # [TO DO] 预处理定义
@@ -57,13 +61,13 @@ set(FPU -mfpu=fpv4-sp-d16)
 set(FLOATABI -mfloat-abi=hard)
 
 # [TO DO] 去掉库中烦人的 warning（可选）
-# set_source_files_properties(
-# 	Core/Src/freertos.c 
-# 	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
-# 	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
+set_source_files_properties(
+	Core/Src/freertos.c 
+	Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c 
+	Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
 
-# 	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
-# )
+	PROPERTIES COMPILE_FLAGS -Wno-unused-parameter
+)
 
 # 编译输出的可执行文件名字
 set(EXECUTABLE ${PROJECT_NAME}.elf)
@@ -89,8 +93,11 @@ target_compile_options(${EXECUTABLE} PRIVATE
 
 	-Wall
 	-Wextra
+	
+	# $<$<COMPILE_LANGUAGE:CXX>:-xc++> # c++ 专用编译选项
+	# $<$<COMPILE_LANGUAGE:C>:-xc> # c 专用编译选项
 
-	$<$<CONFIG:Debug>:-Og>
+	# $<$<CONFIG:Debug>:-Og> #debug 附加选项
 )
 
 target_link_options(${EXECUTABLE} PRIVATE
@@ -99,10 +106,9 @@ target_link_options(${EXECUTABLE} PRIVATE
 	-mthumb
 	${FPU}
 	${FLOATABI}
-	-specs=nano.specs
-	-lc
+	-specs=nosys.specs
 	-lm
-	-lnosys
+	# -lnosys
 	${USER_LINK_OPTIONS}
 	-Wl,-Map=${PROJECT_NAME}.map,--cref
 	-Wl,--gc-sections

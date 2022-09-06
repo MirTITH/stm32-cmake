@@ -82,21 +82,21 @@ Ctrl + Shift + B（默认快捷键）, 选择 Build & Flash
 
 ### 编译
 
-Linux:
+`Linux:`
 
 ```shell
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_TOOLCHAIN_FILE="../arm-none-eabi-gcc.cmake" ..
 make -j
 ```
 
-Windows:
+`Windows PowerShell:`
 
 ```powershell
 mkdir build
 cd build
-cmake -G "MinGW Makefiles" ..
+cmake -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE="../arm-none-eabi-gcc.cmake" ..
 mingw32-make.exe -j
 ```
 
