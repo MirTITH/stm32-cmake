@@ -41,7 +41,7 @@ jlink-sw.cfg
 ### 配置
 
 1. 用 VS Code 打开新工程的文件夹
-2. 参照新工程的 Makefile 文件，修改 CMakeLists.txt 中的 [TO DO] 部分
+2. 参照新工程的 Makefile 文件，修改 CMakeLists.txt 中的 [TODO] 部分
 3. 修改 .vscode\tasks.json 文件的 `"label": "Build & Flash"` 部分
 4. 修改 .vscode\launch.json 文件
 
@@ -108,4 +108,4 @@ openocd -f jlink-sw.cfg -f target/stm32l4x.cfg -c 'program "build/stm32_cmake.el
 
 ## 原理说明
 
-TO DO
+TODO
